@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+        {% include 'home/navbar.html.twig' %}
+<div class="example-wrapper">
+        <div class="row">
+                <br>
+
+            <h1>Promote user to admin</h1>
+            {%for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {%for message in app.flashes('fail') %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+      <select name="users" id="users">
+          {% for user in users %}
+          <option value="{{ user.id }}"> {{ user.firstName }}</option>
+      {% endfor %}
+      </select>
+
+                <a href="#" onclick="passValue()">
+                    <br>
+                    <button type="submit" class="btn btn-success">Promote user to admin</button>
+                </a>
+
+
+
+                <h1>Reservations:</h1>
+                <table><tr>
+                        <th>Id reservation</th>
+                        <th>User id</th>
+                        <th>Room id</th>
+                        <th>Time from</th>
+                        <th>Time to</th>
+                        <th>Date</th>
+                        <th>Invited users</th>
+                        <th>Accepted</th>
+                        </tr>
+
+                {% for reservation in reservations %}
+                        <tr>
+                                <td>{{ reservation.id }}</td>
+                                <td>{{ reservation.user.id }}</td>
+                                <td>{{ reservation.room.id}}</td>
+                                <td>{{ reservation.timeFrom }}</td>
+                                <td>{{ reservation.timeTo }}</td>
+                                <td>{{ reservation.date|date('m-d-y') }}</td>
+                                <td>{% for user in reservation.users %}{{ user }},{% endfor %}</td>
+                                <td>{% for accepted in reservation.accepted %}{{ accepted }},{% endfor %}</td>
+                                <td>
+                                        <a href="{{ path('app_delete_reservation',{id:reservation.id})}}">
+                                                <button type="submit" class="btn btn-danger">Delete reservation</button>
+                                        </a>
+                                </td>
+
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <table>
+                <tr>
+                        <th>Id reservation</th>
+
+                </tr>
+                {% for reservation in reservations %}
+                <tr>
+                        <td> {{ reservation.id }}</td>
+                        <td>
+                                <a href="{{ path('app_update_reservation',{id:reservation.id})}}">
+                                        <button type="submit" class="btn btn-dark">Update reservation</button>
+                                </a>
+                        </td>
+                </tr>
+                {% endfor %}
+
+                </table>
+
+                <br><br><br><br><br>
+
+                <br><br>
+                <h1>Rooms:</h1>
+                <br><br>
+                <table>
+                        <tr>
+                                <th>Room id</th>
+                                <th>Room name</th>
+                                <th>Room capacity</th>
+
+                        </tr>
+                        {% for room in rooms %}
+                                <tr>
+                                        <td>{{ room.id }}</td>
+                                        <td>{{ room.name }}</td>
+                                        <td>{{ room.capacity }}</td>
+
+                                </tr>
+                        {% endfor %}
+                </table>
+
+        </div>
+</div>
+
+    <script>
+        function passValue() {
+            let select = document.getElementById('users');
+            let value = select.options[select.selectedIndex].value;
+           // window.location.href="http://localhost:8088/promote/user/"+value;
+            location.replace("http://localhost:8088/promote/user/"+value);
+           // console.log(value);
+        }
+    </script>
+{% endblock %}
+
